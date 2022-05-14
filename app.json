@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "e-stacione",
+    "slug": "e-stacione",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
