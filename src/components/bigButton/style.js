@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
      title: {
           textAlign: 'center',
           marginTop: 'auto',
-          marginBottom: 'auto'
+          marginBottom: 'auto',
+          color: '#FFF'
      }
 })

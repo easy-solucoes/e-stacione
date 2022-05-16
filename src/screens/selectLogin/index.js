@@ -13,7 +13,7 @@ export function SelectLogin(){
                <View style={styles.contentContainer}>
                     <View style={styles.actionsContainer}>
                          <Text>
-                              Boas vindas ao Park!
+                              Boas vindas ao E-stacione!
                          </Text>
                          <Text>
                               Já utiliza as vagas especiais?

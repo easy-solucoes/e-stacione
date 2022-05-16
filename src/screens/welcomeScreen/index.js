@@ -1,12 +1,17 @@
 import React from 'react';
-import { Text, ScrollView, View, Image} from 'react-native';
+import { Text, ScrollView, View, Image, StatusBar } from 'react-native';
 import { values } from '../../global/constantValues/values';
 import { styles } from './styles';
+import { BigButton } from '../../components/bigButton';
 
 export function WelcomeScreen(){
 
      return(
+          
           <View style={styles.container}>
+               
+               <StatusBar 
+               hidden={true}/>
                <View style={styles.borderRadiusOver}>
                <ScrollView 
                          style={styles.scrollViewContainer}
@@ -16,8 +21,8 @@ export function WelcomeScreen(){
                >
                          <View style={styles.contentContainer}>
                               <Image
-                              source={require('../../../assets/mapsExample.png')} 
-                                   style={styles.contentTextContainer}/>
+                              source={require('../../../assets/LOGO2.jpg')} 
+                                   style={{width: 350, height: 350, marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}/>
                                         
                          </View>
                          <View style={styles.contentContainer}>
@@ -32,12 +37,16 @@ export function WelcomeScreen(){
                     </ScrollView>
                </View>
                <View style={styles.writtenArea}>
-                    <Text style={styles.text}>
+                    <Text style={styles.textTitle}>
                          Bem-vindo(a)!
                     </Text>
-                    <Text style={{fontSize: 20, marginLeft: 15}}>
-                    Boas vindas ao Aplicativo de mobilidade teste do Inatel
+                    <Text style={styles.text}>
+                    Este é o E-stacione, o aplicativo de mobilidade desenvolvido por alunos do Inatel
                     </Text>
+                    <View style={styles.button}>
+                         <BigButton title={"Continuar"}/>
+                    </View>
+                    
                </View>
           </View>
      )
