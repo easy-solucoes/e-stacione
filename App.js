@@ -8,7 +8,7 @@ import { WelcomeScreen } from './src/screens/welcomeScreen';
 export default function App() {
   return (
     <View style={styles.container}>
-    <WelcomeScreen/>
+    <Mapa/>
     </View>
   );
 }
