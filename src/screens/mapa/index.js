@@ -9,43 +9,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { parkingSpaces } from "../../parkingSpaces";
 import { styles } from "./styles";
+import { CreateNewParkingSpace } from "../../parkingSpaces";
 import * as Location from 'expo-location';
 
+let sortedDistancesParkingSpacesFromUser =[];
+let sortedParkingSpacesCoords = [];
 
-function calculateDistance(LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2){
-     let coords = [ LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2];
 
-     let radianCoords = []; 
-     let radianCoordsSin = []; //Sin of each lat and long
-     let radianCoordsCos = []; //Cos of each lat and long
-     
-     let partialSum1 = 1, partialSum2 = 1, partialSum3 = 1;
-     
-     let partialSumGeneral, arcCosin, resultDistance;
 
-     for(let i = 0; i < 4; i++){
-          radianCoords[i] = (coords[i] * Math.PI) / 180
-     }
-     
-     for(let j = 0; j < 4; j++){
-          radianCoordsSin[j] = Math.sin(radianCoords[j]);
-          radianCoordsCos[j] = Math.cos(radianCoords[j]);
-     }
 
-     
-
-     for(let k = 0; k < 4; k++){
-          partialSum1 = partialSum1 * radianCoordsCos[k];
-     }
-     
-     partialSum2 = radianCoordsCos[0] * radianCoordsCos[2] * radianCoordsSin[1] * radianCoordsSin[3];
-     partialSum3 = radianCoordsSin[0] * radianCoordsSin[2];
-     partialSumGeneral = partialSum1 + partialSum2 + partialSum3;
-     arcCosin = Math.acos(partialSumGeneral);
-     resultDistance = arcCosin * 6371 * 1.15;
-
-     return resultDistance
-}
  
 
 export function Mapa(){
@@ -53,11 +25,62 @@ export function Mapa(){
      const [alreadyFetchedLocation, setAlreadyFetchedLocation] = useState(0);
      
 
+     function calculateDistance(LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2){
+          let coords = [ LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2];
+     
+          let radianCoords = []; 
+          let radianCoordsSin = []; //Sin of each lat and long
+          let radianCoordsCos = []; //Cos of each lat and long
+          
+          let partialSum1 = 1, partialSum2 = 1, partialSum3 = 1;
+          
+          let partialSumGeneral, arcCosin, resultDistance;
+     
+          for(let i = 0; i < 4; i++){
+               radianCoords[i] = (coords[i] * Math.PI) / 180
+          }
+          
+          for(let j = 0; j < 4; j++){
+               radianCoordsSin[j] = Math.sin(radianCoords[j]);
+               radianCoordsCos[j] = Math.cos(radianCoords[j]);
+          }
+          
+     
+          for(let k = 0; k < 4; k++){
+               partialSum1 = partialSum1 * radianCoordsCos[k];
+          }
+          
+          partialSum2 = radianCoordsCos[0] * radianCoordsCos[2] * radianCoordsSin[1] * radianCoordsSin[3];
+          partialSum3 = radianCoordsSin[0] * radianCoordsSin[2];
+          partialSumGeneral = partialSum1 + partialSum2 + partialSum3;
+          arcCosin = Math.acos(partialSumGeneral);
+          resultDistance = arcCosin * 6371 * 1.15;
+     
+          return resultDistance
+     }
+
+     function sortCoordsParkingSpaces(sortedDistances){
+          for(let i = 0; i < parkingSpaces.length; i++){
+               for(let j = 0; j < parkingSpaces.length; j++){
+                    if(calculateDistance(
+                         currentUserLocation.coords.latitude,
+                         currentUserLocation.coords.longitude,
+                         parkingSpaces[j].latitude,
+                         parkingSpaces[j].longitude).toFixed(5) == sortedDistances[i].toFixed(5)){
+                              sortedParkingSpacesCoords[i] = parkingSpaces[j];
+                              sortedParkingSpacesCoords[i] = parkingSpaces[j];
+                              
+                         }
+               }
+          }
+          console.log(sortedParkingSpacesCoords)
+     }
+
      useEffect(() => {
           (
                async () => {
                     let status = await Location.requestForegroundPermissionsAsync();
-                    console.log(status)
+                    //console.log(status)
                     let location = await Location.getCurrentPositionAsync({});
                     setCurrentUserLocation(location);
                     setAlreadyFetchedLocation(1);
@@ -69,7 +92,7 @@ export function Mapa(){
 
      if(alreadyFetchedLocation){
           let numberOfParkingSpaces = parkingSpaces.length;
-          let distancesParkingSpacesFromUser = [];
+          let distancesParkingSpacesFromUser = []; //Distancias NAO ordenadas
           let currentDistance;
                     
           for(let i = 0; i < numberOfParkingSpaces; i++){
@@ -83,7 +106,14 @@ export function Mapa(){
                distancesParkingSpacesFromUser[i] = currentDistance;
                
           }
-          console.log(distancesParkingSpacesFromUser)
+          
+
+          sortedDistancesParkingSpacesFromUser = distancesParkingSpacesFromUser.sort(function(a,b){
+               return a - b;
+          });
+          console.log('sorted',sortedDistancesParkingSpacesFromUser)
+          sortCoordsParkingSpaces(sortedDistancesParkingSpacesFromUser)
+
      }
 
      

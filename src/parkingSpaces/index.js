@@ -7,7 +7,7 @@ export const parkingSpaces = [
 ]
 
 
-function CreateNewParkingSpace(bairro, instituicao, latitude, longitude){
+export function CreateNewParkingSpace(bairro, instituicao, latitude, longitude){
      this.bairro = bairro;
      this.instituicao = instituicao;
      this.latitude = latitude;
