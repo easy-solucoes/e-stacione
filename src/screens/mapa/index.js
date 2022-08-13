@@ -6,14 +6,19 @@
 // Spot = Vaga
 import MapView from "react-native-maps";
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View,
+      Text, 
+      ActivityIndicator, 
+      ScrollView,
+     StatusBar } from 'react-native';
 import { parkingSpaces } from "../../parkingSpaces";
 import { styles } from "./styles";
 import { CreateNewParkingSpace } from "../../parkingSpaces";
 import * as Location from 'expo-location';
 
-let sortedDistancesParkingSpacesFromUser =[];
+let sortedDistancesParkingSpacesFromUser;
 let sortedParkingSpacesCoords = [];
+let contextIndex; //Este é o index de contexto para as renderizações condicionais, já que não é possível utilizar o indice que puxamos da função anonima
 
 
 
@@ -23,7 +28,6 @@ let sortedParkingSpacesCoords = [];
 export function Mapa(){
      const [currentUserLocation, setCurrentUserLocation] = useState(0);
      const [alreadyFetchedLocation, setAlreadyFetchedLocation] = useState(0);
-     
 
      function calculateDistance(LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2){
           let coords = [ LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2];
@@ -84,8 +88,6 @@ export function Mapa(){
                     let location = await Location.getCurrentPositionAsync({});
                     setCurrentUserLocation(location);
                     setAlreadyFetchedLocation(1);
-                    
-                    
                }
           )()
      }, [])
@@ -113,12 +115,13 @@ export function Mapa(){
           });
           console.log('sorted',sortedDistancesParkingSpacesFromUser)
           sortCoordsParkingSpaces(sortedDistancesParkingSpacesFromUser)
+          
 
      }
 
      
 
-     if(alreadyFetchedLocation == 0){
+     if(sortedDistancesParkingSpacesFromUser == undefined){
           return(
                <View style={{flex: 1, justifyContent: 'center'}}>
                     <ActivityIndicator size={"large"} color={"#1e81b0"} />
@@ -126,15 +129,17 @@ export function Mapa(){
           )
      }else {
           return(
-               <View>
+               <View style={styles.container}>
+
+                    <StatusBar hidden={true} />
                     <MapView
                     
                          style={styles.mapa}
                          initialRegion={{
                               latitude: -22.256707970525966, // currentUserLocation.coords.latitude,  
                               longitude: -45.69516828189166,// currentUserLocation.coords.longitude,
-                              latitudeDelta: 0.0030733, //zoom
-                              longitudeDelta: 0.0014033,
+                              latitudeDelta: 0.00013033, //zoom
+                              longitudeDelta: 0.00013033,
                          }}
                        showsPointsOfInterest={false}
                        showsUserLocation={true}
@@ -151,6 +156,53 @@ export function Mapa(){
                             ))
                        }
                     </MapView>
+
+                    <ScrollView
+                         style={styles.placesContainer}
+                         horizontal
+                         pagingEnabled
+                         >
+                              {
+                                   (
+
+                                        sortedDistancesParkingSpacesFromUser.map((i) => (
+                                             <View style={styles.place}> 
+                                                  <View style={{flexDirection: "column"}}>
+                                                       <Text style={styles.parkingSpotTitle}>
+                                                            Vaga {sortedDistancesParkingSpacesFromUser.indexOf(i) + 1}
+                                                       </Text>
+                                                       <View style={styles.infoRowContainer}>
+                                                            <Text style={styles.infoTitleText}>
+                                                                 Bairro:
+                                                            </Text> 
+                                                            <Text style={styles.infoText}>
+                                                           
+                                                           { 
+                                                           parkingSpaces[sortedDistancesParkingSpacesFromUser.indexOf(i)].bairro
+                                                           } 
+                                                       </Text> 
+                                                       </View>
+                                                       <View style={styles.infoRowContainer}>
+                                                            <Text style={styles.infoTitleText}>
+                                                                 Instituicao:
+                                                            </Text> 
+                                                            <Text style={styles.infoText}>
+                                                           
+                                                           { 
+                                                           parkingSpaces[sortedDistancesParkingSpacesFromUser.indexOf(i)].instituicao
+                                                           } 
+                                                       </Text> 
+                                                       </View>
+                                                       
+                                                       
+                                                  </View>
+                                                  
+                                             </View>
+                                        ))
+                                   )
+                              }
+
+                    </ScrollView>
                </View>
           )
      }
