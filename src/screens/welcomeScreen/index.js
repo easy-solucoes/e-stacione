@@ -1,11 +1,20 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 import { Text, ScrollView, View, Image, StatusBar } from 'react-native';
 import { values } from '../../global/constantValues/values';
 import { styles } from './styles';
 import { BigButton } from '../../components/bigButton';
+import firebase from '../../firebaseConnection'
 
 export function WelcomeScreen(){
-
+     useEffect(() => { 
+          async function Dados(){
+               await firebase.database().ref('nome').on('value', (snapshot) => {
+                    console.log(snapshot.val()); //TODO: Este é só um teste do firebase
+               })
+          }
+          Dados();
+     }, [])
+     
      return(
           
           <View style={styles.container}>

@@ -15,6 +15,7 @@ import { parkingSpaces } from "../../parkingSpaces";
 import { styles } from "./styles";
 import { CreateNewParkingSpace } from "../../parkingSpaces";
 import * as Location from 'expo-location';
+import firebase from '../../firebaseConnection' //TODO: Versão do firebase está downgrade
 
 let sortedDistancesParkingSpacesFromUser;
 let sortedParkingSpacesCoords = [];
@@ -92,6 +93,17 @@ export function Mapa(){
           )()
      }, [])
 
+     useEffect(() => {
+          (
+               async () => {
+                    await firebase.database().ref('Vagas Especiais/Idoso/Vaga I001').on('value', (snapshot) => {
+                         console.log(snapshot.val()); //TODO: Este é só um teste do firebase
+                    })
+               }
+          )()
+     }, [])
+     
+
      if(alreadyFetchedLocation){
           let numberOfParkingSpaces = parkingSpaces.length;
           let distancesParkingSpacesFromUser = []; //Distancias NAO ordenadas
@@ -136,8 +148,8 @@ export function Mapa(){
                     
                          style={styles.mapa}
                          initialRegion={{
-                              latitude: -22.256707970525966, // currentUserLocation.coords.latitude,  
-                              longitude: -45.69516828189166,// currentUserLocation.coords.longitude,
+                              latitude: -22.256707970525966, // TODO: mudar para currentUserLocation.coords.latitude,   
+                              longitude: -45.69516828189166,// TODO: mudar para currentUserLocation.coords.longitude,
                               latitudeDelta: 0.00013033, //zoom
                               longitudeDelta: 0.00013033,
                          }}
