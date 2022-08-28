@@ -4,6 +4,10 @@
 //let MAX_RADIUS_TO_RENDER_PARKING_SPOTS = 12;
 
 // Spot = Vaga
+/*
+* Sugestões para futuro: 
+Linkar as vagas locais com a vaga da database, para fazer um fetch das vagas
+*/
 import MapView from "react-native-maps";
 import React, { useEffect, useState } from 'react';
 import { View,
@@ -13,22 +17,18 @@ import { View,
      StatusBar } from 'react-native';
 import { parkingSpaces } from "../../parkingSpaces";
 import { styles } from "./styles";
-import { CreateNewParkingSpace } from "../../parkingSpaces";
 import * as Location from 'expo-location';
 import firebase from '../../firebaseConnection' //TODO: Versão do firebase está downgrade
 
 let sortedDistancesParkingSpacesFromUser;
 let sortedParkingSpacesCoords = [];
-let contextIndex; //Este é o index de contexto para as renderizações condicionais, já que não é possível utilizar o indice que puxamos da função anonima
-
-
-
-
+let fetchedParkingSpaces;
  
 
 export function Mapa(){
      const [currentUserLocation, setCurrentUserLocation] = useState(0);
      const [alreadyFetchedLocation, setAlreadyFetchedLocation] = useState(0);
+     const [alreadyFetchedParkingSpaces, setAlreadyFetchedParkingSpaces] = useState(0);
 
      function calculateDistance(LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2){
           let coords = [ LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2];
@@ -78,7 +78,7 @@ export function Mapa(){
                          }
                }
           }
-          console.log(sortedParkingSpacesCoords)
+          //console.log(sortedParkingSpacesCoords)
      }
 
      useEffect(() => {
@@ -96,8 +96,11 @@ export function Mapa(){
      useEffect(() => {
           (
                async () => {
-                    await firebase.database().ref('Vagas Especiais/Idoso/Vaga I001').on('value', (snapshot) => {
-                         console.log(snapshot.val()); //TODO: Este é só um teste do firebase
+                    await firebase.database().ref('Vagas Especiais').on('value', (snapshot) => {
+                         fetchedParkingSpaces = snapshot.val();
+                         console.log(">>>");
+                         console.log(fetchedParkingSpaces); //TODO: Este é só um teste do firebase
+                         setAlreadyFetchedParkingSpaces(1);
                     })
                }
           )()
@@ -125,7 +128,7 @@ export function Mapa(){
           sortedDistancesParkingSpacesFromUser = distancesParkingSpacesFromUser.sort(function(a,b){
                return a - b;
           });
-          console.log('sorted',sortedDistancesParkingSpacesFromUser)
+          //console.log('sorted',sortedDistancesParkingSpacesFromUser)
           sortCoordsParkingSpaces(sortedDistancesParkingSpacesFromUser)
           
 
@@ -133,7 +136,7 @@ export function Mapa(){
 
      
 
-     if(sortedDistancesParkingSpacesFromUser == undefined){
+     if(sortedDistancesParkingSpacesFromUser == undefined || !alreadyFetchedParkingSpaces){
           return(
                <View style={{flex: 1, justifyContent: 'center'}}>
                     <ActivityIndicator size={"large"} color={"#1e81b0"} />
@@ -159,13 +162,15 @@ export function Mapa(){
                     
           
                        {
-                            parkingSpaces.map(place => (
+                            parkingSpaces.map(place => {
+                              console.log(place)
+                              return (
                                  <MapView.Marker
                                    coordinate={{
                                         latitude: place.latitude,
                                         longitude: place.longitude
                                    }}/>
-                            ))
+                            )})
                        }
                     </MapView>
 

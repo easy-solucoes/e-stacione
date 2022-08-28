@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
           textAlign: 'center',
           color: 'white',
           marginTop: 'auto',
-          marginBottom: 'auto'
+          marginBottom: 'auto',
+          fontWeight: 'bold'
      }
 })

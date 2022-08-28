@@ -6,9 +6,11 @@ import { Mapa } from './src/screens/mapa';
 import { WelcomeScreen } from './src/screens/welcomeScreen';
 
 export default function App() {
+
+  
   return (
     <View style={styles.container}>
-    <Mapa/>
+    <SelectLogin/>
     </View>
   );
 }
