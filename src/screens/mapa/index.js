@@ -20,6 +20,9 @@ import { styles } from "./styles";
 import * as Location from 'expo-location';
 import firebase from '../../firebaseConnection' //TODO: Versão do firebase está downgrade
 
+import { BigButton } from '../../components/bigButton'
+
+//let parkingSpaces = [];
 let sortedDistancesParkingSpacesFromUser;
 let sortedParkingSpacesCoords = [];
 let fetchedParkingSpaces;
@@ -29,6 +32,13 @@ export function Mapa(){
      const [currentUserLocation, setCurrentUserLocation] = useState(0);
      const [alreadyFetchedLocation, setAlreadyFetchedLocation] = useState(0);
      const [alreadyFetchedParkingSpaces, setAlreadyFetchedParkingSpaces] = useState(0);
+
+     function CreateNewParkingSpace(bairro, instituicao, latitude, longitude){
+          this.bairro = bairro;
+          this.instituicao = instituicao;
+          this.latitude = latitude;
+          this.longitude = longitude;
+     }
 
      function calculateDistance(LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2){
           let coords = [ LATITUDE_1, LONGITUDE_1, LATITUDE_2, LONGITUDE_2];
@@ -85,11 +95,11 @@ export function Mapa(){
           (
                async () => {
                     let status = await Location.requestForegroundPermissionsAsync();
-                    console.log(status)
+                    //console.log(status)
                     let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, maximumAge: 10000});
                     setCurrentUserLocation(location);
                     setAlreadyFetchedLocation(1);
-                    console.log(location)
+                    //console.log(location)
                }
           )()
      }, [])
@@ -99,8 +109,26 @@ export function Mapa(){
                async () => {
                     await firebase.database().ref('Vagas Especiais').on('value', (snapshot) => {
                          fetchedParkingSpaces = snapshot.val();
-                         //console.log(">>>");
-                         //console.log(fetchedParkingSpaces); //TODO: Este é só um teste do firebase
+
+                         let teste = []
+
+
+                         let idosoParkingSpaces = fetchedParkingSpaces.Idoso.Vagas
+                         let PCDParkingSpacese = fetchedParkingSpaces.PCD.Vagas
+
+                         let numberOfIdosoParkingSpaces = idosoParkingSpaces.length
+                         let numberOfPCDParkingSpaces = PCDParkingSpacese.length
+
+                         console.log(idosoParkingSpaces[0].Bairro); //TODO: Este é só um teste do firebase
+                         
+                         for(let i = 0; i < numberOfIdosoParkingSpaces; i++){
+                              parkingSpaces[i] = new CreateNewParkingSpace(idosoParkingSpaces[i].Bairro, idosoParkingSpaces[i].Rua, idosoParkingSpaces[i].Latitude, idosoParkingSpaces[i].Longitude)
+                              
+
+                         }
+
+                         console.log("teste >>")
+                         console.log(teste)
                          setAlreadyFetchedParkingSpaces(1);
                     })
                     //console.log("Teste")
@@ -165,7 +193,7 @@ export function Mapa(){
           
                        {
                             parkingSpaces.map(place => {
-                              console.log(place)
+                              //console.log(place)
                               return (
                                  <MapView.Marker
                                    coordinate={{
@@ -211,6 +239,9 @@ export function Mapa(){
                                                            parkingSpaces[sortedDistancesParkingSpacesFromUser.indexOf(i)].instituicao
                                                            } 
                                                        </Text> 
+                                                       </View>
+                                                       <View style={styles.placeButton}>
+                                                            <BigButton title={'teste'}/>
                                                        </View>
                                                        
                                                        

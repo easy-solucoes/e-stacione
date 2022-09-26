@@ -53,6 +53,11 @@ export const styles = StyleSheet.create({
           fontSize: 20,
           marginLeft: 20,
           marginTop: 10
+     },
+     placeButton: {
+          marginRight: 'auto',
+          marginLeft: 'auto',
+          marginTop: values.screenHeight/50
      }
 
 
