@@ -85,10 +85,11 @@ export function Mapa(){
           (
                async () => {
                     let status = await Location.requestForegroundPermissionsAsync();
-                    //console.log(status)
-                    let location = await Location.getCurrentPositionAsync({});
+                    console.log(status)
+                    let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, maximumAge: 10000});
                     setCurrentUserLocation(location);
                     setAlreadyFetchedLocation(1);
+                    console.log(location)
                }
           )()
      }, [])
@@ -98,10 +99,11 @@ export function Mapa(){
                async () => {
                     await firebase.database().ref('Vagas Especiais').on('value', (snapshot) => {
                          fetchedParkingSpaces = snapshot.val();
-                         console.log(">>>");
-                         console.log(fetchedParkingSpaces); //TODO: Este é só um teste do firebase
+                         //console.log(">>>");
+                         //console.log(fetchedParkingSpaces); //TODO: Este é só um teste do firebase
                          setAlreadyFetchedParkingSpaces(1);
                     })
+                    //console.log("Teste")
                }
           )()
      }, [])
