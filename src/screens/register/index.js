@@ -3,13 +3,20 @@ import { styles } from './styles';
 
 import { View, TextInput, Image, Text } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
+import { Picker } from '@react-native-picker/picker';
+import { BigButton } from '../../components/bigButton';
+import { LittleButton } from '../../components/littleButton';
 
 import firebase from '../../firebaseConnection'
 
 export function Register(){
+     const [name, setName] = useState('');
      const [email, setEmail] = useState('');
      const [password, setPassword] = useState('');
+     const [typeOfUser, setTypeOfUser] = useState('0');
 
+     console.log(email)
+     
      async function createUser(){
           await firebase.auth().createUserWithEmailAndPassword(email,password)
           .then((value) => {
@@ -40,10 +47,39 @@ export function Register(){
                     />
                     <TextInput 
                          style={styles.textInput}
-                         placeholder="Email"/> 
+                         placeholder="Email"
+                         onChangeText={emailTyped => {
+                              setEmail(emailTyped)
+                         }}
+                         value={email}/> 
+
                     <TextInput 
                          style={styles.textInput}
-                         placeholder="Senha"/>
+                         placeholder="Senha"
+                         onChangeText={passwordTyped => {
+                              setPassword(passwordTyped)
+                         }}
+                         value={password}/>
+                    
+                    <Picker 
+                    style={styles.picker}
+                    selectedValue={typeOfUser}
+                    onValueChange={(selectedOption, selectedOptionIndex) => 
+                         setTypeOfUser(selectedOption)
+                    }> 
+
+                         <Picker.Item label= "Selecionar" value='0'/>
+                         <Picker.Item label="Idoso" value="Idoso"/>
+                         <Picker.Item label="PCD" value="PCD"/>
+                    
+               
+                    </Picker>
+                    <View style={styles.buttonContainer}>
+                         <BigButton title={"Registrar"}/>
+                    </View>
+                    
+                    
+
                </View>
           </View>
      )

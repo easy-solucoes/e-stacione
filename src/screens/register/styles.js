@@ -30,5 +30,18 @@ export const styles = StyleSheet.create({
           fontSize: 30,
           marginLeft: 'auto',
           marginRight: 'auto',
+     },
+     picker: {
+          height: 100,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          marginTop: 20,
+          width: 200,
+          fontSize: 50,
+          borderBottomWidth: 0.5
+     },
+     buttonContainer: {
+          marginLeft: 'auto',
+          marginRight: 'auto'
      }
 })
