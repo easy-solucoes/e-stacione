@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { styles } from './styles';
 
-import { View, TextInput } from 'react-native'
+import { View, TextInput, Image, Text } from 'react-native'
+import { StatusBar } from 'expo-status-bar';
 
 import firebase from '../../firebaseConnection'
 
@@ -24,12 +25,25 @@ export function Register(){
      return(
           <View style={styles.container}>
                <View>
-                   <TextInput 
+                    <View style={styles.imageContainer}>
+                         <Image 
+                              source={require('../../../assets/LOGO2.jpg')}
+                              style={styles.icon}
+                         />
+                    </View>
+                    <Text style={styles.title}>
+                         Cadastre-se
+                    </Text>
+                    <TextInput 
+                         style={styles.textInput}
                          placeholder="Nome"
-                         
                     />
-                   <TextInput 
+                    <TextInput 
+                         style={styles.textInput}
                          placeholder="Email"/> 
+                    <TextInput 
+                         style={styles.textInput}
+                         placeholder="Senha"/>
                </View>
           </View>
      )
