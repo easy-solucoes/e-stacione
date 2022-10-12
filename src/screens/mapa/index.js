@@ -115,7 +115,7 @@ export function Mapa(){
 
                          let idosoParkingSpaces = fetchedParkingSpaces.Idoso.Vagas
                          let PCDParkingSpacese = fetchedParkingSpaces.PCD.Vagas
-
+ 
                          let numberOfIdosoParkingSpaces = idosoParkingSpaces.length
                          let numberOfPCDParkingSpaces = PCDParkingSpacese.length
 
@@ -128,10 +128,9 @@ export function Mapa(){
                          }
 
                          console.log("teste >>")
-                         console.log(teste)
+                         console.log(parkingSpaces)
                          setAlreadyFetchedParkingSpaces(1);
                     })
-                    //console.log("Teste")
                }
           )()
      }, [])
